@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:random_user/components/custom_error.dart';
 import 'package:random_user/components/custom_loading.dart';
-import 'package:random_user/components/user_screen/avatar.dart';
 import 'package:random_user/components/user_screen/user_info.dart';
 import 'package:random_user/logic/repository/repository.dart';
 import 'package:random_user/screens/user_bloc/user_bloc.dart';

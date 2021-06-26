@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:dio/dio.dart';
 import 'package:meta/meta.dart';
 import 'package:random_user/helper/catch_exceptions.dart';
 import 'package:random_user/logic/model/user_model.dart';

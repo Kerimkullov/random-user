@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:random_user/helper/catch_exceptions.dart';
 
 class DioSettings {
   static final mainServer = "https://randomuser.me";
