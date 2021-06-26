@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:random_user/components/custom_error.dart';
+import 'package:random_user/components/custom_loading.dart';
 import 'package:random_user/components/user_screen/avatar.dart';
+import 'package:random_user/components/user_screen/user_info.dart';
+import 'package:random_user/logic/repository/repository.dart';
+import 'package:random_user/screens/user_bloc/user_bloc.dart';
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key? key, required this.title}) : super(key: key);
@@ -14,8 +20,11 @@ class _MyHomePageState extends State<MyHomePage>
     with SingleTickerProviderStateMixin {
   TabController? _tabController;
 
+  final bloc = UserBloc(UserRepository());
+
   @override
   void initState() {
+    bloc.add(GetUserEvent());
     _tabController = TabController(length: 2, vsync: this);
     super.initState();
   }
@@ -32,84 +41,30 @@ class _MyHomePageState extends State<MyHomePage>
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            SizedBox(height: 16),
-            Avatar(),
-            SizedBox(height: 16),
-            Text(
-              'Kerimkulov Dastan',
-              style: Theme.of(context).textTheme.headline5,
-            ),
-
-            SizedBox(height: 32),
-            Container(
-              height: 45,
-              decoration: BoxDecoration(
-                color: Colors.grey[300],
-                borderRadius: BorderRadius.circular(
-                  25.0,
-                ),
+      body: BlocBuilder<UserBloc, UserState>(
+        bloc: bloc,
+        builder: (_context, state) {
+          if (state is UserInitial) {
+            return CustomLoading();
+          } else if (state is UserLoaded) {
+            return BlocProvider.value(
+              value: bloc,
+              child: UserInfo(
+                tabController: _tabController,
+                user: state.model,
               ),
-              child: TabBar(
-                controller: _tabController,
-                indicator: BoxDecoration(
-                  borderRadius: BorderRadius.circular(
-                    25.0,
-                  ),
-                  color: Colors.green,
-                ),
-                labelColor: Colors.white,
-                unselectedLabelColor: Colors.black,
-                tabs: [
-                  Tab(
-                    text: 'Contact',
-                  ),
-                  Tab(
-                    text: 'Adress',
-                  ),
-                ],
-              ),
-            ),
-            // tab bar view here
-            Expanded(
-              child: TabBarView(
-                controller: _tabController,
-                children: [
-                  // first tab bar view widget
-                  Center(
-                    child: Text(
-                      'Place Bid',
-                      style: TextStyle(
-                        fontSize: 25,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-
-                  // second tab bar view widget
-                  Center(
-                    child: Text(
-                      'Buy Now',
-                      style: TextStyle(
-                        fontSize: 25,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              width: 100,
-              child: ElevatedButton(
-                  child: Icon(Icons.replay_outlined), onPressed: () {}),
-            ),
-            SizedBox(height: 32)
-          ],
-        ),
+            );
+          } else if (state is UserError) {
+            return BlocProvider.value(
+              value: bloc,
+              child: CustomError(message: state.message.message),
+            );
+          }
+          return BlocProvider.value(
+            value: bloc,
+            child: CustomError(),
+          );
+        },
       ),
     );
   }

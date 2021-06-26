@@ -9,3 +9,8 @@ class UserLoaded extends UserState {
   final User model;
   UserLoaded(this.model);
 }
+
+class UserError extends UserState {
+  final CatchException message;
+  UserError(this.message);
+}

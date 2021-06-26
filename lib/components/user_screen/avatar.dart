@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class Avatar extends StatelessWidget {
-  const Avatar({Key? key}) : super(key: key);
+  const Avatar({Key? key, this.url}) : super(key: key);
+  final String? url;
 
   @override
   Widget build(BuildContext context) {
@@ -9,7 +10,7 @@ class Avatar extends StatelessWidget {
       height: 100,
       width: 100,
       child: CircleAvatar(
-        child: Image.network("https://img.icons8.com/bubbles/2x/user-male.png"),
+        backgroundImage: NetworkImage(url!),
       ),
     );
   }
